@@ -8,8 +8,10 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^3.2",
+        "laravel-lang/common": "^6.4",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "laravel/ui": "^4.6",
         "predis/predis": "^2.3"
     },
     "require-dev": {
