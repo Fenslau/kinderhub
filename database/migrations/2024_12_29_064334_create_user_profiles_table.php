@@ -16,8 +16,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('role')->default(UserRoleEnum::USER);
-            $table->boolean('active')->default(1);
             $table->text('image')->nullable();
+            $table->string('phone')->nullable();
+            $table->text('about')->nullable();
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }

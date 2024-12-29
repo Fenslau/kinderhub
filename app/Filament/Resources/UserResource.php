@@ -8,14 +8,16 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Group;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -45,14 +47,21 @@ class UserResource extends Resource
                     ->email()
                     ->unique(ignoreRecord: true)
                     ->required()
+                    ->suffixIcon('heroicon-m-envelope')
                     ->maxLength(255)
                     ->disabled(!request()->user()->isAdmin()),
                 DateTimePicker::make('email_verified_at')
                     ->label('Email подтвержден')
                     ->default(now())
-                    ->maxDate(today()->addDay())
                     ->disabled(!request()->user()->isAdmin()),
-                Group::make()
+                TextInput::make('password')
+                    ->label('Пароль')
+                    ->password()
+                    ->revealable()
+                    ->dehydrated(fn(?string $state): bool => filled($state))
+                    ->required(fn(string $operation): bool => $operation === 'create')
+                    ->maxLength(255),
+                Fieldset::make()
                     ->relationship('profile')
                     ->schema([
                         Select::make('role')
@@ -61,7 +70,10 @@ class UserResource extends Resource
                             ->default(UserRoleEnum::USER->value)
                             ->selectablePlaceholder(false)
                             ->disabled(!request()->user()->isAdmin()),
-
+                        TextInput::make('phone')
+                            ->label('Телефон')
+                            ->mask('+7 999 999 99 99')
+                            ->suffixIcon('heroicon-m-phone'),
                         FileUpload::make('image')
                             ->label('Аватар')
                             ->image()
@@ -70,17 +82,18 @@ class UserResource extends Resource
                             ->circleCropper()
                             ->directory('user-images')
                             ->maxSize(5000),
-                        Toggle::make('active')
+                        RichEditor::make('about')
+                            ->label('Информация')
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                            ]),
+                        Toggle::make('is_active')
                             ->label('Активен')
+                            ->default(1)
                             ->disabled(!request()->user()->isAdmin()),
                     ]),
-                TextInput::make('password')
-                    ->label('Пароль')
-                    ->password()
-                    ->revealable()
-                    ->dehydrated(fn(?string $state): bool => filled($state))
-                    ->required(fn(string $operation): bool => $operation === 'create')
-                    ->maxLength(255),
             ]);
     }
 
@@ -95,22 +108,24 @@ class UserResource extends Resource
                 TextColumn::make('email')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->label('Email подтвержден')
-                    ->dateTime()
+                IconColumn::make('email_verified_at')
+                    ->label('Подтверждён')
+                    ->boolean()
+                    ->alignCenter()
                     ->sortable(),
                 SelectColumn::make('profile.role')
                     ->label('Роль')
                     ->options(UserRoleEnum::getSelects())
                     ->selectablePlaceholder(false)
-                    ->disabled(!request()->user()->isAdmin())
+                    ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
                     ->sortable(),
                 ImageColumn::make('profile.image')
                     ->label('Аватар')
                     ->circular(),
-                ToggleColumn::make('profile.active')
+                ToggleColumn::make('profile.is_active')
                     ->label('Активен')
-                    ->disabled(!request()->user()->isAdmin()),
+                    ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Создано')
                     ->dateTime()
@@ -132,7 +147,11 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordClasses(fn(Model $record) => match ($record->isActive()) {
+                false => 'opacity-50',
+                default => null,
+            });
     }
 
     public static function getRelations(): array
