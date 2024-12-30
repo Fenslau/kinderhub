@@ -2,22 +2,20 @@
 
 namespace App\Enums;
 
-use App\Enums\Traits\EnumTrait;
+use Filament\Support\Contracts\HasLabel;
 
-enum UserRoleEnum: int
+enum UserRoleEnum: int implements HasLabel
 {
-    use EnumTrait;
-
     case USER = 1;
     case MODERATOR = 5;
     case ADMIN = 10;
 
-    private static function getDescription(self $case): string
+    public function getLabel(): ?string
     {
-        return match ($case) {
+        return match ($this) {
             self::USER => 'Пользователь',
             self::MODERATOR => 'Модератор',
-            self::ADMIN => 'Администратор'
+            self::ADMIN => 'Администратор',
         };
     }
 }

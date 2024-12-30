@@ -74,11 +74,11 @@ class User extends Authenticatable implements FilamentUser
 
     public function isAdmin(): bool
     {
-        return $this->profile?->role === UserRoleEnum::ADMIN->value && $this->isActive();
+        return $this->profile?->role === UserRoleEnum::ADMIN && $this->isActive();
     }
 
     public function isModer(): bool
     {
-        return $this->profile?->role === UserRoleEnum::MODERATOR->value && $this->isActive();
+        return $this->profile?->role === UserRoleEnum::MODERATOR && $this->isActive();
     }
 }

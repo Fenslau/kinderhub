@@ -66,8 +66,8 @@ class UserResource extends Resource
                     ->schema([
                         Select::make('role')
                             ->label('Роль')
-                            ->options(UserRoleEnum::getSelects())
-                            ->default(UserRoleEnum::USER->value)
+                            ->options(UserRoleEnum::class)
+                            ->default(UserRoleEnum::USER)
                             ->selectablePlaceholder(false)
                             ->disabled(!request()->user()->isAdmin()),
                         TextInput::make('phone')
@@ -115,7 +115,7 @@ class UserResource extends Resource
                     ->sortable(),
                 SelectColumn::make('profile.role')
                     ->label('Роль')
-                    ->options(UserRoleEnum::getSelects())
+                    ->options(UserRoleEnum::class)
                     ->selectablePlaceholder(false)
                     ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
                     ->sortable(),
@@ -128,12 +128,13 @@ class UserResource extends Resource
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Создано')
-                    ->dateTime()
+                    ->date()
+                    ->timeTooltip()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('updated_at')
                     ->label('Изменено')
-                    ->dateTime()
+                    ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
