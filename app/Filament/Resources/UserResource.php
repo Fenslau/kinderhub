@@ -69,7 +69,7 @@ class UserResource extends Resource
                             ->options(UserRoleEnum::class)
                             ->default(UserRoleEnum::USER)
                             ->selectablePlaceholder(false)
-                            ->disabled(!request()->user()->isAdmin()),
+                            ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id),
                         TextInput::make('phone')
                             ->label('Телефон')
                             ->mask('+7 999 999 99 99')
@@ -92,7 +92,7 @@ class UserResource extends Resource
                         Toggle::make('is_active')
                             ->label('Активен')
                             ->default(1)
-                            ->disabled(!request()->user()->isAdmin()),
+                            ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
                     ]),
             ]);
     }

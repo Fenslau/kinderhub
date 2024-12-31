@@ -33,10 +33,14 @@
           @endif
           @else
           <li class="nav-item dropdown">
-            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-              <img src="{{ Storage::url(Auth::user()->profile->image) }}"
-                style="height: 2rem; width: 2rem;"
-                class="max-w-none object-cover object-center rounded-full ring-white dark:ring-gray-900">
+            <a id="navbarDropdown" class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+              @if(!empty(Auth::user()->profile->image))
+              <img src="{{ filter_var(Auth::user()->profile->image, FILTER_VALIDATE_URL) 
+                ? Auth::user()->profile->image 
+                : Storage::url(Auth::user()->profile->image) }}"
+                style="height: 2.5rem; width: 2.5rem;"
+                class="rounded-circle">
+              @endif
               {{ Auth::user()->name }}
             </a>
 
