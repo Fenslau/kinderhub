@@ -63,10 +63,20 @@ class UserPolicy
         return false;
     }
 
+    public function restoreAny(User $user): bool
+    {
+        return false;
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      */
     public function forceDelete(User $user, User $model): bool
+    {
+        return false;
+    }
+
+    public function forceDeleteAny(User $user): bool
     {
         return false;
     }

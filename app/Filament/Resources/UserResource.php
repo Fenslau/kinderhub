@@ -69,7 +69,7 @@ class UserResource extends Resource
                             ->options(UserRoleEnum::class)
                             ->default(UserRoleEnum::USER)
                             ->selectablePlaceholder(false)
-                            ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id),
+                            ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin() || $record?->id === request()->user()->id),
                         TextInput::make('phone')
                             ->label('Телефон')
                             ->mask('+7 999 999 99 99')
@@ -92,7 +92,7 @@ class UserResource extends Resource
                         Toggle::make('is_active')
                             ->label('Активен')
                             ->default(1)
-                            ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
+                            ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin() || $record?->id === request()->user()->id)
                     ]),
             ]);
     }
@@ -139,7 +139,7 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -147,12 +147,26 @@ class UserResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->recordClasses(fn(Model $record) => match ($record->isActive()) {
                 false => 'opacity-50',
                 default => null,
+            })
+            ->recordClasses(fn(Model $record) => match ($record->trashed()) {
+                true => 'opacity-50',
+                default => null,
             });
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function getRelations(): array

@@ -13,7 +13,6 @@
         <ul class="navbar-nav me-auto">
 
         </ul>
-
         <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ms-auto">
           <!-- Authentication Links -->
@@ -34,23 +33,24 @@
           @else
           <li class="nav-item dropdown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-              @if(!empty(Auth::user()->profile->image))
-              <img src="{{ filter_var(Auth::user()->profile->image, FILTER_VALIDATE_URL) 
-                ? Auth::user()->profile->image 
-                : Storage::url(Auth::user()->profile->image) }}"
+              @if(!empty($authUser->profile->image))
+              <img src="{{ filter_var($authUser->profile->image, FILTER_VALIDATE_URL) 
+                ? $authUser->profile->image 
+                : Storage::url($authUser->profile->image) }}"
                 style="height: 2.5rem; width: 2.5rem;"
                 class="rounded-circle">
               @endif
-              {{ Auth::user()->name }}
+              {{ $authUser->name }}
             </a>
 
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              @if(auth()->user()->isAdmin())
+              @if($authUser->isAdmin())
               <a class="dropdown-item" href="{{ route('filament.admin.pages.dashboard') }}">
                 <i class="fa fa-cog" aria-hidden="true"></i> Админка
               </a>
               @endif
-              <a class="dropdown-item" href="{{ route('filament.admin.resources.users.edit', auth()->user()->id) }}">
+              <a href="{{ route('filament.admin.resources.users.edit', $authUser->id) }}"
+                @class(['dropdown-item', 'disabled'=> !$authUser->isActive()])>
                 <i class="fa fa-user" aria-hidden="true"></i> Профиль
               </a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -58,7 +58,7 @@
               </form>
               <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                  document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> {{ __('Logout') }}
               </a>
             </div>
