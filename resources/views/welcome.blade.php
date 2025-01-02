@@ -14,7 +14,11 @@
         </div>
         <div class="col-md-8 col-xl-9">
             <div class="">
-
+                @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+                @endif
             </div>
         </div>
 
