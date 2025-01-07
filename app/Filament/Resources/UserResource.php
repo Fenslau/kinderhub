@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\UserRoleEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\City;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
@@ -15,6 +16,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -26,6 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 
 class UserResource extends Resource
 {
@@ -74,6 +77,20 @@ class UserResource extends Resource
                             ->label('Телефон')
                             ->mask('+7 999 999 99 99')
                             ->suffixIcon('heroicon-m-phone'),
+                        Select::make('region_id')
+                            ->label('Регион')
+                            ->options(City::where('owner', 481)->orderBy('order')->pluck('name', 'id'))
+                            ->default(1070)
+                            ->searchable()
+                            ->live(),
+                        Select::make('city_id')
+                            ->label('Населенный пункт')
+                            ->options(fn(Get $get): Collection => City::query()
+                                ->where('owner', $get('region_id'))
+                                ->orderBy('order')
+                                ->pluck('name', 'id'))
+                            ->default(26405)
+                            ->searchable(),
                         FileUpload::make('image')
                             ->label('Аватар')
                             ->image()
@@ -126,6 +143,12 @@ class UserResource extends Resource
                     ->label('Активен')
                     ->disabled(fn(Model $record): bool => !request()->user()->isAdmin() || $record->id === request()->user()->id)
                     ->sortable(),
+                TextColumn::make('deleted_at')
+                    ->label('Удалено')
+                    ->date()
+                    ->timeTooltip()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->label('Создано')
                     ->date()
@@ -135,6 +158,7 @@ class UserResource extends Resource
                 TextColumn::make('updated_at')
                     ->label('Изменено')
                     ->date()
+                    ->timeTooltip()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
