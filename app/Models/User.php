@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRoleEnum;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
@@ -57,8 +60,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         if ($panel->getId() === 'admin') {
             return $this->isActive();
         }
-
         return true;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        if (!empty($this->profile?->image)) {
+            if (Str::startsWith($this->profile?->image, 'user-images')) {
+                return Storage::url($this->profile?->image);
+            } else return $this->profile?->image;
+        } else return null;
     }
 
     public function profile(): HasOne
@@ -69,7 +80,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function isActive(): bool
     {
-        return $this->profile?->is_active === 1 && !empty($this->email_verified_at);
+        return $this->profile?->is_active === 1 && !empty($this->email_verified_at) && !$this->trashed();
     }
 
     public function isAdmin(): bool

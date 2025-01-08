@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('title');
+            $table->text('description')->nullable();
             $table->string('slug')->nullable();
             $table->string('image')->nullable();
             $table->text('content')->nullable();
-            $table->text('content_advanced')->nullable();
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_global')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

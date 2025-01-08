@@ -7,10 +7,12 @@ use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -44,33 +46,43 @@ class ArticleResource extends Resource
                     ->required()
                     ->selectablePlaceholder(false)
                     ->default(request()->user()->id),
+                TextInput::make('slug')
+                    ->required()
+                    ->label('Ссылка')
+                    ->prefix(env('APP_URL') . '/articles/')
+                    ->suffixIcon('heroicon-m-globe-alt')
+                    ->disabled()
+                    ->maxLength(255),
                 TextInput::make('title')
                     ->label('Название')
                     ->required()
                     ->maxLength(255)
                     ->live(debounce: 500)
                     ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', SlugService::createSlug(Article::class, 'slug', $state ?? ''))),
-                TextInput::make('slug')
-                    ->required()
-                    ->label('Ссылка')
-                    ->readonly()
-                    ->maxLength(255),
+                DateTimePicker::make('created_at')
+                    ->label('Создано')
+                    ->default(now())
+                    ->seconds(false),
                 FileUpload::make('image')
                     ->label('Изображение')
-                    ->image(),
-                Section::make('Контент')
-                    ->schema([
-                        RichEditor::make('content')
-                            ->fileAttachmentsDirectory('article-attachments')
-                            ->label('Блок контента'),
-                        RichEditor::make('content_advanced')
-                            ->fileAttachmentsDirectory('article-attachments')
-                            ->label('Блок контента'),
-                    ])
-                    ->columns(1),
+                    ->image()
+                    ->imageEditor()
+                    ->directory('article-images')
+                    ->previewable(true),
+                Textarea::make('description')
+                    ->label('Описание (для SEO)')
+                    ->rows(3)
+                    ->maxLength(1000),
+
+
                 Toggle::make('is_active')
                     ->label('Активно')
-                    ->default(1),
+                    ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin())
+                    ->default(fn(?Model $record): bool => request()->user()->isAdmin()),
+                Toggle::make('is_global')
+                    ->label('На главной')
+                    ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin())
+                    ->default(0)
             ]);
     }
 
@@ -81,15 +93,28 @@ class ArticleResource extends Resource
                 TextColumn::make('user.name')
                     ->label('Автор')
                     ->sortable()
+                    ->limit(16)
                     ->searchable(),
                 TextColumn::make('title')
                     ->label('Название')
                     ->sortable()
+                    ->limit(32)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    })
                     ->searchable(),
                 ImageColumn::make('image')
                     ->label('Изображение'),
                 ToggleColumn::make('is_active')
                     ->label('Активно')
+                    ->disabled(fn(Model $record): bool => !request()->user()->isAdmin())
+                    ->sortable(),
+                ToggleColumn::make('is_global')
+                    ->label('На главной')
                     ->disabled(fn(Model $record): bool => !request()->user()->isAdmin())
                     ->sortable(),
                 TextColumn::make('deleted_at')
@@ -128,10 +153,7 @@ class ArticleResource extends Resource
                 false => 'opacity-50',
                 default => null,
             })
-            ->recordClasses(fn(Model $record) => match ($record->trashed()) {
-                true => 'opacity-50',
-                default => null,
-            });
+            ->defaultSort('is_global', 'desc');
     }
 
     public static function getRelations(): array

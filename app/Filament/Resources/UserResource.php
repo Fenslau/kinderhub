@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
 
 class UserResource extends Resource
 {
@@ -98,6 +100,7 @@ class UserResource extends Resource
                             ->imageEditor()
                             ->circleCropper()
                             ->directory('user-images')
+                            ->dehydrated(fn(?Model $record): bool => Str::startsWith($record?->profile?->image, 'user-images'))
                             ->maxSize(5000),
                         RichEditor::make('about')
                             ->label('Информация')
@@ -177,10 +180,6 @@ class UserResource extends Resource
             ])
             ->recordClasses(fn(Model $record) => match ($record->isActive()) {
                 false => 'opacity-50',
-                default => null,
-            })
-            ->recordClasses(fn(Model $record) => match ($record->trashed()) {
-                true => 'opacity-50',
                 default => null,
             });
     }

@@ -26,4 +26,9 @@ class Article extends Model
             ]
         ];
     }
+
+    public function isActive(): bool
+    {
+        return $this->is_active === 1 && !$this->trashed();
+    }
 }

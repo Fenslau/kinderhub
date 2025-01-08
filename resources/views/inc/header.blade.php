@@ -49,7 +49,7 @@
                 <i class="fa fa-cog" aria-hidden="true"></i> Админка
               </a>
               @endif
-              <a href="{{ route('filament.admin.resources.users.edit', $authUser->id) }}"
+              <a href="{{ route('filament.admin.auth.profile') }}"
                 @class(['dropdown-item', 'disabled'=> !$authUser->isActive()])>
                 <i class="fa fa-user" aria-hidden="true"></i> Профиль
               </a>
