@@ -40,7 +40,7 @@
                 style="height: 2.5rem; width: 2.5rem;"
                 class="rounded-circle">
               @endif
-              {{ $authUser->name }}
+              {{ Str::limit($authUser->name, 20) }}
             </a>
 
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

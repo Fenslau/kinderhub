@@ -13,6 +13,13 @@ class Article extends Model
 
     protected $guarded = [];
 
+    protected function casts(): array
+    {
+        return [
+            'content' => 'json',
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -30,5 +37,10 @@ class Article extends Model
     public function isActive(): bool
     {
         return $this->is_active === 1 && !$this->trashed();
+    }
+
+    public function isGlobal(): bool
+    {
+        return $this->is_global === 1 && $this->isActive();
     }
 }

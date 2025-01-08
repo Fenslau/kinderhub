@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('slug')->nullable();
-            $table->string('image')->nullable();
-            $table->text('content')->nullable();
+            $table->longText('content')->nullable();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_global')->default(false);
             $table->softDeletes();

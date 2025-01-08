@@ -124,12 +124,28 @@ class UserResource extends Resource
                 TextColumn::make('name')
                     ->label('Имя')
                     ->sortable()
+                    ->limit(16)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+                        if (Str::length($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    })
                     ->searchable(),
                 TextColumn::make('email')
                     ->sortable()
+                    ->limit(16)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+                        if (Str::length($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    })
                     ->searchable(),
                 IconColumn::make('email_verified_at')
-                    ->label('Подтверждён')
+                    ->label('Подтв.')
                     ->boolean()
                     ->alignCenter()
                     ->sortable(),

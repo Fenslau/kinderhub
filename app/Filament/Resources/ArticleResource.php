@@ -7,10 +7,11 @@ use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Filament\Forms;
+use Filament\Forms\Components\Builder as ComponentsBuilder;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -27,6 +28,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArticleResource extends Resource
 {
@@ -63,18 +66,48 @@ class ArticleResource extends Resource
                     ->label('Создано')
                     ->default(now())
                     ->seconds(false),
-                FileUpload::make('image')
-                    ->label('Изображение')
-                    ->image()
-                    ->imageEditor()
-                    ->directory('article-images')
-                    ->previewable(true),
                 Textarea::make('description')
                     ->label('Описание (для SEO)')
                     ->rows(3)
                     ->maxLength(1000),
-
-
+                Fieldset::make()
+                    ->columns(1)
+                    ->schema([
+                        ComponentsBuilder::make('content')
+                            ->label('Контент')
+                            ->blocks([
+                                ComponentsBuilder\Block::make('editor')
+                                    ->label('Блок текста')
+                                    ->icon('heroicon-m-bars-3-bottom-left')
+                                    ->schema([
+                                        RichEditor::make('editor')
+                                            ->label('Блок текста')
+                                            ->fileAttachmentsDirectory('article-images')
+                                            ->required(),
+                                    ])
+                                    ->columns(1),
+                                ComponentsBuilder\Block::make('image')
+                                    ->label('Изображение')
+                                    ->icon('heroicon-m-photo')
+                                    ->schema([
+                                        FileUpload::make('url')
+                                            ->label('Изображение')
+                                            ->image()
+                                            ->imageEditor()
+                                            ->directory('article-images')
+                                            ->required(),
+                                        TextInput::make('title')
+                                            ->label('Название')
+                                            ->maxLength(255),
+                                        TextInput::make('description')
+                                            ->label('Описание')
+                                            ->maxLength(255),
+                                    ])
+                                    ->columns(1),
+                            ])
+                            ->reorderableWithButtons()
+                            ->blockIcons(),
+                    ]),
                 Toggle::make('is_active')
                     ->label('Активно')
                     ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin())
@@ -94,21 +127,36 @@ class ArticleResource extends Resource
                     ->label('Автор')
                     ->sortable()
                     ->limit(16)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+                        if (Str::length($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+                        return $state;
+                    })
                     ->searchable(),
                 TextColumn::make('title')
                     ->label('Название')
+                    ->description(fn(Article $record): ?string => Str::limit($record->description, 32))
                     ->sortable()
                     ->limit(32)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
-                        if (strlen($state) <= $column->getCharacterLimit()) {
+                        if (Str::length($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
                         return $state;
                     })
                     ->searchable(),
                 ImageColumn::make('image')
-                    ->label('Изображение'),
+                    ->label('Изображение')
+                    ->defaultImageUrl(fn(Article $record): ?string =>
+                    collect($record->content)->firstWhere('type', 'image')['data']['url'] ?? null
+                        ? Storage::url(collect($record->content)->firstWhere('type', 'image')['data']['url'] ?? null)
+                        : null)
+                    ->extraImgAttributes(fn(Article $record): array => [
+                        'alt' => collect($record->content)->firstWhere('type', 'image')['data']['title'] ?? null,
+                    ]),
                 ToggleColumn::make('is_active')
                     ->label('Активно')
                     ->disabled(fn(Model $record): bool => !request()->user()->isAdmin())
