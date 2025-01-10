@@ -95,7 +95,8 @@ class ArticleResource extends Resource
                                             ->image()
                                             ->imageEditor()
                                             ->directory('article-images')
-                                            ->required(),
+                                            ->required()
+                                            ->maxSize(10000),
                                         TextInput::make('title')
                                             ->label('Название')
                                             ->maxLength(255),

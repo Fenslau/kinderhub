@@ -8,6 +8,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -75,6 +76,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->whereActive(true);
     }
 
 

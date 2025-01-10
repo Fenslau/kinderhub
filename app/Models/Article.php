@@ -5,6 +5,7 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
@@ -20,11 +21,6 @@ class Article extends Model
         ];
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function sluggable(): array
     {
         return [
@@ -32,6 +28,16 @@ class Article extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereActive(true)->orderBy('created_at', 'asc');
     }
 
     public function isActive(): bool

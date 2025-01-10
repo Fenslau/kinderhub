@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\LoginController;
@@ -26,4 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
+});
+
+Route::group([
+    'prefix' => 'articles',
+    'as' => 'articles.'
+], function ($router) {
+    $router->get('', [ArticleController::class, 'index'])->name('index');
+    $router->get('{slug}', [ArticleController::class, 'show'])->name('show');
 });
