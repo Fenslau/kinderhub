@@ -48,8 +48,9 @@ class Comment extends Model
     protected static function boot()
     {
         parent::boot();
-        static::saving(function (Comment $comment) {
+        static::saved(function (Comment $comment) {
             $comment->link = $comment->generateLink();
+            $comment->saveQuietly();
         });
     }
 

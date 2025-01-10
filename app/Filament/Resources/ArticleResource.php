@@ -230,4 +230,9 @@ class ArticleResource extends Resource
                 ActiveScope::class,
             ]);
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 }
