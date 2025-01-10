@@ -87,7 +87,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
 
     public function isActive(): bool
     {
-        return $this->profile?->is_active === 1 && !empty($this->email_verified_at) && !$this->trashed();
+        return $this->profile?->is_active && !empty($this->email_verified_at);
     }
 
     public function isAdmin(): bool

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->string('phone')->nullable();
             $table->text('about')->nullable();
-            $table->boolean('is_active')->default(1);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

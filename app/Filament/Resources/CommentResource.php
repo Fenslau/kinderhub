@@ -131,7 +131,7 @@ class CommentResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
-            ->recordClasses(fn(Model $record) => match ($record->isActive()) {
+            ->recordClasses(fn(Model $record) => match ($record->isActive() && !$record->trashed()) {
                 false => 'opacity-50',
                 default => null,
             })

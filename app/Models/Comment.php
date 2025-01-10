@@ -19,6 +19,7 @@ class Comment extends Model
 
     protected $casts = [
         'text' => CleanHtml::class,
+        'is_active' => 'boolean'
     ];
 
     public function commentable(): MorphTo
@@ -41,7 +42,7 @@ class Comment extends Model
 
     public function isActive(): bool
     {
-        return $this->is_active === 1 && !$this->trashed();
+        return $this->is_active;
     }
 
     protected static function boot()

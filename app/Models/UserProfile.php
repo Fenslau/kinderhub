@@ -14,6 +14,7 @@ class UserProfile extends Model
     {
         return [
             'role' => UserRoleEnum::class,
+            'is_active' => 'boolean'
         ];
     }
 

@@ -19,6 +19,8 @@ class Article extends Model
     {
         return [
             'content' => 'json',
+            'is_active' => 'boolean',
+            'is_global' => 'boolean'
         ];
     }
 
@@ -43,11 +45,11 @@ class Article extends Model
 
     public function isActive(): bool
     {
-        return $this->is_active === 1 && !$this->trashed();
+        return $this->is_active;
     }
 
     public function isGlobal(): bool
     {
-        return $this->is_global === 1 && $this->isActive();
+        return $this->is_global && $this->isActive();
     }
 }
