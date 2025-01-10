@@ -16,6 +16,5 @@ class CitySeeder extends Seeder
         $path = database_path('sql/cities.sql');
         $sql = file_get_contents($path);
         DB::unprepared($sql);
-        $this->command->info('SQL-дамп успешно импортирован!');
     }
 }

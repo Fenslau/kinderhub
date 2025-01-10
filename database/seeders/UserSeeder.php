@@ -21,7 +21,9 @@ class UserSeeder extends Seeder
             'password' => bcrypt('000000')
         ]);
         $user->profile()->updateOrCreate([
-            'role' => UserRoleEnum::ADMIN
+            'role' => UserRoleEnum::ADMIN,
+            'region_id' => 1070,
+            'city_id' => 26405
         ]);
     }
 }

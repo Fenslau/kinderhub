@@ -101,7 +101,7 @@ class UserResource extends Resource
                             ->imageEditor()
                             ->circleCropper()
                             ->directory('user-images')
-                            ->dehydrated(fn(?Model $record): bool => Str::startsWith($record?->profile?->image, 'user-images'))
+                            ->dehydrated(fn(?array $state, ?Model $record): bool => !(Str::startsWith($record?->image, 'http') && !count($state)))
                             ->maxSize(5000),
                         RichEditor::make('about')
                             ->label('Информация')

@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Artisan::call('migrate:rollback');
+        Artisan::call('db:wipe');
         $this->call([
             CitySeeder::class,
         ]);
