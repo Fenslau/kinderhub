@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\CommentableEnum;
 use App\Filament\Resources\CommentResource\Pages;
 use App\Filament\Resources\CommentResource\RelationManagers;
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Scopes\ActiveScope;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
@@ -45,7 +45,8 @@ class CommentResource extends Resource
                         MorphToSelect\Type::make(Comment::class)
                             ->titleAttribute('text')
                             ->getOptionLabelFromRecordUsing(fn(Comment $record): string => strip_tags($record->text)),
-                    ]),
+                    ])
+                    ->required(),
                 Select::make('user_id')
                     ->label('Автор')
                     ->relationship('user', 'name')
@@ -133,7 +134,8 @@ class CommentResource extends Resource
             ->recordClasses(fn(Model $record) => match ($record->isActive()) {
                 false => 'opacity-50',
                 default => null,
-            });
+            })
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -157,6 +159,7 @@ class CommentResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
+                ActiveScope::class,
             ]);
     }
 }

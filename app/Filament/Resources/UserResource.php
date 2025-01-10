@@ -6,6 +6,7 @@ use App\Enums\UserRoleEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\City;
+use App\Models\Scopes\ActiveScope;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
@@ -197,7 +198,8 @@ class UserResource extends Resource
             ->recordClasses(fn(Model $record) => match ($record->isActive()) {
                 false => 'opacity-50',
                 default => null,
-            });
+            })
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getEloquentQuery(): Builder
@@ -205,6 +207,7 @@ class UserResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
+                ActiveScope::class,
             ]);
     }
 

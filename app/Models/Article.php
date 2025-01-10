@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Activeable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-    use SoftDeletes, Sluggable;
+    use SoftDeletes, Sluggable, Activeable;
 
     protected $guarded = [];
 
@@ -37,7 +38,7 @@ class Article extends Model
 
     public function comments(): MorphMany
     {
-        return $this->morphMany(Comment::class, 'commentable')->whereActive(true)->orderBy('created_at', 'asc');
+        return $this->morphMany(Comment::class, 'commentable')->orderBy('created_at', 'asc');
     }
 
     public function isActive(): bool

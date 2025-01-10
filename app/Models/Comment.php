@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CommentableEnum;
+use App\Traits\Activeable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -12,7 +13,7 @@ use Mews\Purifier\Casts\CleanHtml;
 
 class Comment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Activeable;
 
     protected $guarded = [];
 
@@ -35,7 +36,7 @@ class Comment extends Model
 
     public function comments(): MorphMany
     {
-        return $this->morphMany(Comment::class, 'commentable')->whereActive(true)->orderBy('created_at', 'asc');
+        return $this->morphMany(Comment::class, 'commentable')->orderBy('created_at', 'asc');
     }
 
     public function isActive(): bool
@@ -70,9 +71,19 @@ class Comment extends Model
             array_column(CommentableEnum::cases(), 'value'),
             fn($class) => $class !== CommentableEnum::COMMENT->value
         );
-        while ($entity && !in_array(get_class($entity), $validClasses)) {
+        $visitedEntities = [];
+        while ($entity) {
+            $entityClass = get_class($entity);
+            $uniqueKey = $entityClass . '|' . $entity->id;
+            if (in_array($uniqueKey, $visitedEntities, true)) {
+                return null;
+            }
+            $visitedEntities[] = $uniqueKey;
+            if (in_array($entityClass, $validClasses)) {
+                return $entity;
+            }
             $entity = $entity->commentable ?? null;
         }
-        return $entity;
+        return null;
     }
 }

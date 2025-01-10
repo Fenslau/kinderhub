@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRoleEnum;
+use App\Traits\Activeable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, Activeable;
 
     /**
      * The attributes that are mass assignable.
@@ -80,7 +81,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class)->whereActive(true);
+        return $this->hasMany(Comment::class);
     }
 
 

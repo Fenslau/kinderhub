@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
+use App\Models\Scopes\ActiveScope;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Filament\Forms;
 use Filament\Forms\Components\Builder as ComponentsBuilder;
@@ -202,7 +203,7 @@ class ArticleResource extends Resource
                 false => 'opacity-50',
                 default => null,
             })
-            ->defaultSort('is_global', 'desc');
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -226,6 +227,7 @@ class ArticleResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
+                ActiveScope::class,
             ]);
     }
 }
