@@ -19,7 +19,8 @@ class Comment extends Model
 
     protected $casts = [
         'text' => CleanHtml::class,
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'commentable_type' => CommentableEnum::class
     ];
 
     public function commentable(): MorphTo

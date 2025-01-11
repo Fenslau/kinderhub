@@ -16,7 +16,16 @@ class UserSeeder extends Seeder
     {
         $user = User::updateOrCreate(['email' => 'c01@bk.ru'], [
             'name' => 'c01',
-            'email' => 'c01@bk.ru',
+            'email_verified_at' => now(),
+            'password' => bcrypt('000000')
+        ]);
+        $user->profile()->updateOrCreate([
+            'role' => UserRoleEnum::ADMIN,
+            'region_id' => 1070,
+            'city_id' => 26405
+        ]);
+        $user = User::updateOrCreate(['email' => 'barabinka@bk.ru'], [
+            'name' => 'Kate',
             'email_verified_at' => now(),
             'password' => bcrypt('000000')
         ]);

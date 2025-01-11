@@ -41,8 +41,10 @@ class CommentResource extends Resource
                     ->label('Источник')
                     ->types([
                         MorphToSelect\Type::make(Article::class)
+                            ->label('Статья')
                             ->titleAttribute('title'),
                         MorphToSelect\Type::make(Comment::class)
+                            ->label('Комментарий')
                             ->titleAttribute('text')
                             ->getOptionLabelFromRecordUsing(fn(Comment $record): string => strip_tags($record->text)),
                     ])
