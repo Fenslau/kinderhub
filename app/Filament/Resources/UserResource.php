@@ -20,6 +20,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
@@ -112,7 +113,7 @@ class UserResource extends Resource
                             ]),
                         Toggle::make('is_active')
                             ->label('Активен')
-                            ->default(1)
+                            ->default(true)
                             ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin() || $record?->id === request()->user()->id)
                     ]),
             ]);
@@ -186,7 +187,12 @@ class UserResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -196,7 +202,7 @@ class UserResource extends Resource
                 ]),
             ])
             ->recordClasses(fn(Model $record) => match ($record->isActive() && !$record->trashed()) {
-                false => 'opacity-50',
+                false => 'bg-gray-100',
                 default => null,
             })
             ->defaultSort('created_at', 'desc');

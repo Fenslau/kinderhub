@@ -2,16 +2,16 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
+use App\Models\Announcement;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class CommentPolicy
+class AnnouncementPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(User $user): bool
     {
         return true;
     }
@@ -19,7 +19,7 @@ class CommentPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, Comment $comment): bool
+    public function view(User $user, Announcement $announcement): bool
     {
         return true;
     }
@@ -29,23 +29,23 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->isActive();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Comment $comment): bool
+    public function update(User $user, Announcement $announcement): bool
     {
-        return $user->id === $comment->user_id && !$comment->comments()->exists();
+        return $user->id === $announcement->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Comment $comment): bool
+    public function delete(User $user, Announcement $announcement): bool
     {
-        return false;
+        return $user->id === $announcement->user_id;
     }
 
     public function deleteAny(User $user): bool
@@ -56,9 +56,9 @@ class CommentPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Comment $comment): bool
+    public function restore(User $user, Announcement $announcement): bool
     {
-        return false;
+        return $user->id === $announcement->user_id;
     }
 
     public function restoreAny(User $user): bool
@@ -69,7 +69,7 @@ class CommentPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Comment $comment): bool
+    public function forceDelete(User $user, Announcement $announcement): bool
     {
         return false;
     }

@@ -56,6 +56,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->profile(AuthEditProfile::class)
             ->databaseNotifications()
-            ->sidebarCollapsibleOnDesktop();
+            ->sidebarCollapsibleOnDesktop()
+            //->databaseTransactions()
+            ->spa();
     }
 }

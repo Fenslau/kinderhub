@@ -73,7 +73,7 @@ class EditProfile extends BaseEditProfile
                             ]),
                         Toggle::make('is_active')
                             ->label('Активен')
-                            ->default(1)
+                            ->default(true)
                             ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin() || $record?->id === request()->user()->id)
                     ])
                     ->columns(1),

@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
+use App\Models\CareCategory;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class CommentPolicy
+class CareCategoryPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, Comment $comment): bool
+    public function view(User $user, CareCategory $careCategory): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -29,26 +29,21 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Comment $comment): bool
+    public function update(User $user, CareCategory $careCategory): bool
     {
-        return $user->id === $comment->user_id && !$comment->comments()->exists();
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Comment $comment): bool
-    {
-        return false;
-    }
-
-    public function deleteAny(User $user): bool
+    public function delete(User $user, CareCategory $careCategory): bool
     {
         return false;
     }
@@ -56,12 +51,7 @@ class CommentPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Comment $comment): bool
-    {
-        return false;
-    }
-
-    public function restoreAny(User $user): bool
+    public function restore(User $user, CareCategory $careCategory): bool
     {
         return false;
     }
@@ -69,12 +59,7 @@ class CommentPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Comment $comment): bool
-    {
-        return false;
-    }
-
-    public function forceDeleteAny(User $user): bool
+    public function forceDelete(User $user, CareCategory $careCategory): bool
     {
         return false;
     }

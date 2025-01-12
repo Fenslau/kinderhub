@@ -21,6 +21,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -112,12 +113,10 @@ class ArticleResource extends Resource
                     ]),
                 Toggle::make('is_active')
                     ->label('Активно')
-                    ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin())
-                    ->default(fn(?Model $record): bool => request()->user()->isAdmin()),
+                    ->default(true),
                 Toggle::make('is_global')
                     ->label('На главной')
-                    ->disabled(fn(?Model $record): bool => !request()->user()->isAdmin())
-                    ->default(0)
+                    ->default(false)
             ]);
     }
 
@@ -190,7 +189,12 @@ class ArticleResource extends Resource
                 TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -200,7 +204,7 @@ class ArticleResource extends Resource
                 ]),
             ])
             ->recordClasses(fn(Model $record) => match ($record->isActive() && !$record->trashed()) {
-                false => 'opacity-50',
+                false => 'bg-gray-100',
                 default => null,
             })
             ->defaultSort('created_at', 'desc');

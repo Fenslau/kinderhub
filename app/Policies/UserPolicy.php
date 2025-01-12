@@ -47,9 +47,6 @@ class UserPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can delete All models.
-     */
     public function deleteAny(User $user): bool
     {
         return false;
