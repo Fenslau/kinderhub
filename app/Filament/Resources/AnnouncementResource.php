@@ -23,6 +23,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,7 +36,7 @@ class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-magnifying-glass';
     protected static ?string $modelLabel = 'Объявление';
     protected static ?string $pluralModelLabel = 'Объявления';
 
@@ -119,12 +120,12 @@ class AnnouncementResource extends Resource
                 TextColumn::make('type')
                     ->label('Тип')
                     ->sortable()
-                    ->badge()
-                    ->description(fn(Announcement $record): string => $record->careCategory->title, position: 'above'),
+                    ->badge(),
                 TextColumn::make('sub_category')
-                    ->label('Подкатегория')
+                    ->label('Категория')
                     ->badge()
-                    ->color('info'),
+                    ->color('info')
+                    ->description(fn(Announcement $record): string => $record->careCategory->title, position: 'above'),
                 TextColumn::make('title')
                     ->label('Заголовок')
                     ->sortable()
@@ -165,6 +166,12 @@ class AnnouncementResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('type')
+                    ->label('Тип')
+                    ->options(AnnouncementTypeEnum::class),
+                SelectFilter::make('category_id')
+                    ->label('Категория')
+                    ->relationship('careCategory', 'title'),
                 TrashedFilter::make(),
             ])
             ->actions([

@@ -18,6 +18,9 @@
     <div id="app">
         @include('inc.header')
         <main class="py-4">
+            @include('inc.status')
+            @include('inc.messages')
+            @include('inc.toast')
             @yield('content')
         </main>
         @include('inc.footer')
