@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRoleEnum;
+use App\Notifications\ResetPassword;
+use App\Notifications\VerifyEmail;
 use App\Traits\Activeable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -57,6 +59,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         ];
     }
 
+    protected $with = [
+        'profile',
+    ];
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
@@ -84,6 +90,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         return $this->hasMany(Comment::class);
     }
 
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class);
+    }
 
     public function isActive(): bool
     {
@@ -98,5 +108,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
     public function isModer(): bool
     {
         return $this->profile?->role === UserRoleEnum::MODERATOR && $this->isActive();
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
     }
 }

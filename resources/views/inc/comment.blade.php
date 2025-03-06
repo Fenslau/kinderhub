@@ -1,0 +1,55 @@
+<div class="border-start">
+  <div @class([ 'card my-2' , 'ms-4'=> $comment->commentable instanceof \App\Models\Comment && (Route::is('articles.show') ),
+    'ms-5' => $comment->commentable?->commentable instanceof \App\Models\Comment && Route::is('articles.show'),
+    ]) id="comment_show{{ $comment->id }}">
+
+    <div class="card-header p-1 d-flex justify-content-between align-items-baseline">
+      <div class="overflow-hidden text-nowrap">
+        @empty($comment->user?->profile?->image)
+        <span class="text-muted align-middle"><i class="fa fa-user"></i></span>
+        @else
+        <img class="rounded-circle d-inline-block" style="max-height: 1.5rem;" src="{{ filter_var($comment->user?->profile->image, FILTER_VALIDATE_URL) 
+                ? $comment->user?->profile->image 
+                : Storage::url($comment->user?->profile->image) }}" alt="">
+        @endempty
+        <a @class([ 'text-decoration-none badge link-secondary align-middle' , 'badge bg-secondary text-white link-light ms-1'=> $comment->user?->id === $authUser?->id,
+          'badge bg-success text-white link-light ms-1' => $comment->user?->id === $article?->user?->id,
+          ]) href="{{ route('users.show', $comment->user?->id) }}"><span class="fs-6">{{ $comment->user->name }}</span></a>
+
+      </div>
+      <div class="text-muted small text-truncate">
+        {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        {!! nl2br($comment->text) !!}
+      </p>
+    </div>
+    <div class="card-footer py-1">
+      <div class="d-flex justify-content-between align-items-baseline">
+        <a class="small align-middle" data-bs-toggle="collapse" href="#comment{{ $comment->id }}" role="button">Ответить</a>
+        @if(Route::is('users.show'))
+        <a class="small align-middle" href="{{ $comment->link }}">Ссылка</a>
+        @else
+        <a class="small align-middle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Скопировать ссылку" role="button" onclick="navigator.clipboard.writeText('{{ $comment->link }}').then(() => {this.innerText = 'скопировано'})"><i class="fa fa-link"></i></a>
+        @endif
+      </div>
+
+      <form class="collapse" id="comment{{ $comment->id }}" action="{{ route('comments.store') }}" method="post">
+        @csrf
+        <div class="text-end">
+          <input type="hidden" name="comment"
+            @if($comment->commentable?->commentable instanceof \App\Models\Comment)
+          value="{{ $comment->commentable?->id }}"
+          @else
+          value="{{ $comment->id }}"
+          @endif
+          >
+          <textarea name="text" placeholder="Комментарий..." class="form-control mb-1" id="" rows="3"></textarea>
+          <button type="submit" class="btn btn-outline-primary btn-sm">Отправить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

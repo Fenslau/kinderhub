@@ -5,7 +5,9 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -35,4 +37,20 @@ Route::group([
 ], function ($router) {
     $router->get('', [ArticleController::class, 'index'])->name('index');
     $router->get('{slug}', [ArticleController::class, 'show'])->name('show');
+});
+
+Route::group([
+    'prefix' => 'users',
+    'as' => 'users.'
+], function ($router) {
+    $router->get('', [UserController::class, 'index'])->name('index');
+    $router->get('{slug}', [UserController::class, 'show'])->name('show');
+});
+
+Route::group([
+    'prefix' => 'comments',
+    'as' => 'comments.'
+], function ($router) {
+    $router->post('', [CommentController::class, 'store'])->name('store')
+        ->middleware(['auth', 'verified']);
 });

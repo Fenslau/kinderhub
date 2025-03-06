@@ -14,16 +14,12 @@ class ActiveScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $table = $model->getTable();
-        if (Schema::hasColumn($table, 'is_active')) {
-            $builder->where($table . '.is_active', 1);
-        } elseif (method_exists($model, 'profile')) {
-            $builder->whereHas('profile', function ($query) use ($model) {
-                $profileTable = $model->profile()->getRelated()->getTable();
-                if (Schema::hasColumn($profileTable, 'is_active')) {
-                    $query->where('is_active', 1);
-                }
+        if (method_exists($model, 'profile')) {
+            $builder->whereHas('profile', function ($query) {
+                $query->where('is_active', 1);
             });
+        } else {
+            $builder->where('is_active', 1);
         }
     }
 }

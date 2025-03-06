@@ -14,6 +14,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -23,6 +24,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -72,6 +74,14 @@ class ArticleResource extends Resource
                     ->label('Описание (для SEO)')
                     ->rows(3)
                     ->maxLength(1000),
+                SpatieTagsInput::make('tags')
+                    ->label('Тэги')
+                    ->reorderable()
+                    ->nestedRecursiveRules([
+                        'min:3',
+                        'max:50',
+                    ])
+                    ->type('articles'),
                 Fieldset::make()
                     ->columns(1)
                     ->schema([
@@ -149,6 +159,9 @@ class ArticleResource extends Resource
                         return $state;
                     })
                     ->searchable(),
+                SpatieTagsColumn::make('tags')
+                    ->label('Тэги')
+                    ->type('articles'),
                 ImageColumn::make('image')
                     ->label('Изображение')
                     ->defaultImageUrl(fn(Article $record): ?string =>

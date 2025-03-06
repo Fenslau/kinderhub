@@ -3,7 +3,7 @@
 @section('title-block', '')
 @section('description-block', '')
 
-
+@section('breadcrumbs', Breadcrumbs::render('home'))
 @section('content')
 
 <div class="my-3 container-lg main">
