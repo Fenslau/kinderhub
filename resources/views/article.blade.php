@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title-block', 'Статьи')
-@section('description-block', 'Статьи про Ла2')
+@section('title-block', $article->title)
+@section('description-block', $article->description ?? '')
 
 @section('breadcrumbs', Breadcrumbs::render('article', $article))
 @section('content')
@@ -16,13 +16,7 @@
 
           <div class="my-3 card-text d-flex justify-content-between align-items-baseline">
             <a class="text-decoration-none" @empty($article->user?->id) @else href="{{ route('users.show', $article->user?->id ?? '') }}" @endempty>
-              @empty($article->user?->profile?->image)
-              <span class="text-muted align-middle"><i class="fa fa-user"></i></span>
-              @else
-              <img class="rounded-circle d-inline-block" style="max-height: 1.5rem;" src="{{ filter_var($article->user?->profile->image, FILTER_VALIDATE_URL) 
-                ? $article->user?->profile->image 
-                : Storage::url($article->user?->profile->image) }}" alt="">
-              @endempty
+              @include('user.avatar', ['user' => $article->user])
               {{ $article->user->name }}
             </a>
             <small class="text-muted">Опубликовано: {{ \Carbon\Carbon::parse($article->created_at)->diffForHumans() }}</small>
@@ -35,33 +29,49 @@
 
           @foreach ($content as $element)
           @if ($element['type'] === 'editor')
-          @if (!empty($imageGroup))
+
+          @if (count($imageGroup) > 1)
           @include('inc.carousel', ['images' => $imageGroup])
           @php
+          $imageGroup = [];
+          @endphp
+          @elseif (count($imageGroup) === 1)
+
+          <div class="d-flex justify-content-center">
+            <img style="max-height: 400px;" class="img-fluid my-3" src="{{ Storage::url($imageGroup[0]['url']) }}" alt="{{ $imageGroup[0]['title'] }}">
+          </div>
+          @php
+          $imageGroup = [];
           @endphp
           @endif
-          <div class="mt-5 card-text">
+
+          <div class="mt-3 card-text">
             {!! $element['data']['editor'] !!}
           </div>
           @elseif ($element['type'] === 'image')
+
           @php
           $imageGroup[] = $element['data'];
           @endphp
           @endif
           @endforeach
+
           @if (!empty($imageGroup))
-          @if (count($imageGroup) === 1)
-          <div class="d-flex justify-content-center">
-            <img style="max-height: 400px;" class="img-fluid rounded-3 my-3" src="{{ Storage::url($imageGroup[0]['url']) }}" alt="{{ $imageGroup[0]['title'] }}">
-          </div>
-          @else
+          @if (count($imageGroup) > 1)
           @include('inc.carousel', ['images' => $imageGroup])
+          @elseif (count($imageGroup) === 1)
+          <div class="d-flex justify-content-center">
+            <img style="max-height: 400px;"
+              class="img-fluid rounded-3 my-3"
+              src="{{ Storage::url($imageGroup[0]['url']) }}"
+              alt="{{ $imageGroup[0]['title'] }}">
+          </div>
           @endif
           @endif
 
         </div>
 
-        <ul class="list-group list-group-flush border-secondary">
+        <ul class="list-group list-group-flush border">
           <li class="list-group-item text-muted small">
             @include('inc.article-tags')
           </li>

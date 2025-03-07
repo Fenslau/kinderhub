@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title-block', '')
+@section('title-block', config('app.name'))
 @section('description-block', '')
 
 @section('breadcrumbs', Breadcrumbs::render('home'))

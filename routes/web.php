@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -44,7 +45,15 @@ Route::group([
     'as' => 'users.'
 ], function ($router) {
     $router->get('', [UserController::class, 'index'])->name('index');
-    $router->get('{slug}', [UserController::class, 'show'])->name('show');
+    $router->get('{user}', [UserController::class, 'show'])->name('show');
+});
+
+Route::group([
+    'prefix' => 'cities',
+    'as' => 'cities.'
+], function ($router) {
+    $router->get('', [CityController::class, 'index'])->name('index');
+    $router->get('{city}', [CityController::class, 'show'])->name('show');
 });
 
 Route::group([

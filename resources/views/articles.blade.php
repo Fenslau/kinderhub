@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title-block', 'Статьи')
-@section('description-block', 'Статьи про Ла2')
+@section('title-block', config('app.name') . ' - Статьи')
+@section('description-block', '')
 
 @section('breadcrumbs', Breadcrumbs::render('articles'))
 @section('content')

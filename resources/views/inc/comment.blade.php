@@ -5,15 +5,10 @@
 
     <div class="card-header p-1 d-flex justify-content-between align-items-baseline">
       <div class="overflow-hidden text-nowrap">
-        @empty($comment->user?->profile?->image)
-        <span class="text-muted align-middle"><i class="fa fa-user"></i></span>
-        @else
-        <img class="rounded-circle d-inline-block" style="max-height: 1.5rem;" src="{{ filter_var($comment->user?->profile->image, FILTER_VALIDATE_URL) 
-                ? $comment->user?->profile->image 
-                : Storage::url($comment->user?->profile->image) }}" alt="">
-        @endempty
-        <a @class([ 'text-decoration-none badge link-secondary align-middle' , 'badge bg-secondary text-white link-light ms-1'=> $comment->user?->id === $authUser?->id,
-          'badge bg-success text-white link-light ms-1' => $comment->user?->id === $article?->user?->id,
+        @include('user.avatar', ['user' => $comment->user])
+        <a @class([ 'text-decoration-none badge align-middle px-1' , 'text-bg-success'=> $comment->user?->id === $article?->user?->id,
+          'text-bg-info' => $comment->user?->id === $authUser?->id && $comment->user?->id !== $article?->user?->id,
+          'text-bg-light' => $comment->user?->id !== $authUser?->id && $comment->user?->id !== $article?->user?->id,
           ]) href="{{ route('users.show', $comment->user?->id) }}"><span class="fs-6">{{ $comment->user->name }}</span></a>
 
       </div>

@@ -1,5 +1,5 @@
 <header>
-  <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+  <nav class="navbar navbar-expand-md navbar-light bg-primary shadow-sm" data-bs-theme="dark">
     <div class="container">
       <a class="navbar-brand" href="{{ url('/') }}">
         <i class="fa fa-home" aria-hidden="true"></i>{{ config('app.name', 'Laravel') }}
@@ -33,17 +33,16 @@
           @else
           <li class="nav-item dropdown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-              @if(!empty($authUser->profile->image))
-              <img src="{{ filter_var($authUser->profile->image, FILTER_VALIDATE_URL) 
-                ? $authUser->profile->image 
-                : Storage::url($authUser->profile->image) }}"
-                style="height: 2.5rem; width: 2.5rem;"
-                class="rounded-circle">
-              @endif
+              @include('user.avatar', ['user' => $authUser, 'maxHeight' => '2.5', 'xHeight' => 2])
               {{ Str::limit($authUser->name, 20) }}
             </a>
 
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              @if(!$authUser->hasVerifiedEmail())
+              <a class="dropdown-item" href="{{ route('verification.notice') }}">
+                <i class="fa fa-envelope" aria-hidden="true"></i> Подтвердить email
+              </a>
+              @endif
               @if($authUser->isAdmin())
               <a class="dropdown-item" href="{{ route('filament.admin.pages.dashboard') }}">
                 <i class="fa fa-cog" aria-hidden="true"></i> Админка
@@ -61,6 +60,19 @@
                   document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> {{ __('Logout') }}
               </a>
+
+              <script>
+                function toggleTheme() {
+                  const html = document.documentElement;
+                  const currentTheme = html.getAttribute('data-bs-theme');
+                  html.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
+                }
+              </script>
+              <a class="dropdown-item" href=""
+                onclick="event.preventDefault(); toggleTheme()">
+                <i class="fa fa-lightbulb-o" aria-hidden="true"></i> Переключить тему
+              </a>
+
             </div>
           </li>
           @endguest
