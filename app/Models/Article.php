@@ -38,6 +38,8 @@ class Article extends Model
 
     protected $with = [
         'user',
+        'tags',
+        'comments'
     ];
 
     public function user(): BelongsTo

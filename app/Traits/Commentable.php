@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Traits;
 
 trait Commentable
 {
 
-  public function commentsCount() {
+  public function commentsCount()
+  {
     $comments = $this->comments;
     $count = count($comments);
     foreach ($comments as $nestetComment) {

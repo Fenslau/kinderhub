@@ -13,15 +13,9 @@ main {
   min-height: 85vh;
 }
 
-figure.image {
-  margin: auto;
-  text-align: center;
-  max-width: 100%;  
-}
-
-figure img {
+img {
   max-width: 100%;
-  margin: auto;
+  height: auto;
 }
 
 figcaption {
@@ -30,7 +24,7 @@ figcaption {
 
 .text-overflow-container {
   box-sizing: border-box;
-  height: 92%;
+  height: 100%;
 }
 
 .text-overflow-container::after {

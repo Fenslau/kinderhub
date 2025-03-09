@@ -71,11 +71,13 @@
 
         </div>
 
+        @if(count($article->tags))
         <ul class="list-group list-group-flush border">
           <li class="list-group-item text-muted small">
             @include('inc.article-tags')
           </li>
         </ul>
+        @endif
 
         <div class="card-footer d-flex justify-content-between">
           <div class="">

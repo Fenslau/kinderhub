@@ -118,6 +118,7 @@ class ArticleResource extends Resource
                                     ])
                                     ->columns(1),
                             ])
+                            ->addActionLabel('Добавить контент')
                             ->reorderableWithButtons()
                             ->blockIcons(),
                     ]),

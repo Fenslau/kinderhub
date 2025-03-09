@@ -38,13 +38,15 @@
         </div>
       </div>
 
-      <ul class="list-group list-group-flush border-secondary">
+      @if(count($article->tags))
+      <ul class="list-group list-group-flush border">
         <li class="list-group-item text-muted small">
           @include('inc.article-tags')
         </li>
       </ul>
-      <div class="card-footer">
+      @endif
 
+      <div class="card-footer">
         <div class="d-flex justify-content-between">
           <div class="">
             <a role='button' class="text-decoration-none"

@@ -13,7 +13,6 @@ class ArticleRepository implements ReadOnlyRepositoryInterface
     public function index(array $params = array()): LengthAwarePaginator
     {
         $articles = Article::query()
-            ->with('comments')
             ->orderBy('is_global', 'desc')
             ->orderBy('created_at', 'desc');
         if (!empty($params['tag'])) {
