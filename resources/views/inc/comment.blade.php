@@ -6,7 +6,7 @@
     <div class="card-header p-1 d-flex justify-content-between align-items-baseline">
       <div class="overflow-hidden text-nowrap">
         @include('user.avatar', ['user' => $comment->user])
-        <a @class([ 'text-decoration-none badge align-middle px-1' , 'text-bg-success'=> $comment->user?->id === $article?->user?->id,
+        <a @class([ 'text-decoration-none badge rounded-pill align-middle px-2' , 'text-bg-success'=> $comment->user?->id === $article?->user?->id,
           'text-bg-info' => $comment->user?->id === $authUser?->id && $comment->user?->id !== $article?->user?->id,
           'text-bg-light' => $comment->user?->id !== $authUser?->id && $comment->user?->id !== $article?->user?->id,
           ]) href="{{ route('users.show', $comment->user?->id) }}"><span class="fs-6">{{ $comment->user->name }}</span></a>

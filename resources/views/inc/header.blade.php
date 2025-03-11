@@ -11,7 +11,12 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- Left Side Of Navbar -->
         <ul class="navbar-nav me-auto">
-
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('articles.index') }}">Статьи</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('articles.index') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="В разработке">Объявления</a>
+          </li>
         </ul>
         <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ms-auto">

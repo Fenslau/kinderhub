@@ -3,7 +3,6 @@
 @section('title-block', config('app.name'))
 @section('description-block', '')
 
-@section('breadcrumbs', Breadcrumbs::render('home'))
 @section('content')
 
 <div class="my-3 container-lg main">

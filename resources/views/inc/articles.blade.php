@@ -3,8 +3,8 @@
   <div class="w-100">
     <div class="card h-100">
       <div class="card-header">
-        <a class="nav-link link-body-emphasis pb-0" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
-          <h2 style="color: inherit" class="my-0">{{ $article->title }}</h2>
+        <a class="nav-link pb-0" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
+          <h2 class="my-0">{{ $article->title }}</h2>
         </a>
       </div>
       <div class="card-body">
