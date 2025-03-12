@@ -13,9 +13,19 @@ Breadcrumbs::for('articles', function ($trail) {
     $trail->push('Статьи', route('articles.index'));
 });
 
-Breadcrumbs::for('article', function ($trail, $event) {
+Breadcrumbs::for('article', function ($trail, $article) {
     $trail->parent('articles');
-    $trail->push($event->title, route('articles.show', $event->slug));
+    $trail->push($article->title, route('articles.show', $article->slug));
+});
+
+Breadcrumbs::for('announcements', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Объявления', route('announcements.index'));
+});
+
+Breadcrumbs::for('announcement', function ($trail, $announcement) {
+    $trail->parent('announcements');
+    $trail->push($announcement->title, route('announcements.show', $announcement->slug));
 });
 
 Breadcrumbs::for('search', function ($trail) {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -38,6 +39,14 @@ Route::group([
 ], function ($router) {
     $router->get('', [ArticleController::class, 'index'])->name('index');
     $router->get('{slug}', [ArticleController::class, 'show'])->name('show');
+});
+
+Route::group([
+    'prefix' => 'announcements',
+    'as' => 'announcements.'
+], function ($router) {
+    $router->get('', [AnnouncementController::class, 'index'])->name('index');
+    $router->get('{slug}', [AnnouncementController::class, 'show'])->name('show');
 });
 
 Route::group([

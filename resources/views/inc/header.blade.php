@@ -15,7 +15,7 @@
             <a class="nav-link" href="{{ route('articles.index') }}">Статьи</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('articles.index') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="В разработке">Объявления</a>
+            <a class="nav-link" href="{{ route('announcements.index') }}">Объявления</a>
           </li>
         </ul>
         <!-- Right Side Of Navbar -->

@@ -16,12 +16,12 @@ class ArticleController extends Controller
     public function index(ArticleRequest $request): View
     {
         $articles = $this->repo->index($request->all());
-        return view('articles', compact('articles'));
+        return view('article.index', compact('articles'));
     }
 
     public function show(string $slug): View
     {
         $article = $this->repo->show($slug);
-        return view('article', compact('article'));
+        return view('article.show', compact('article'));
     }
 }

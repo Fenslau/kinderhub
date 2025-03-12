@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-8 col-xl-9">
       <div id="articles" class="">
-        @include('inc.articles')
+        @include('article.list')
       </div>
     </div>
 

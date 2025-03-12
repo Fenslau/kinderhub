@@ -3,8 +3,14 @@
   <div class="w-100">
     <div class="card h-100">
       <div class="card-header">
-        <a class="nav-link pb-0" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
+        <a class="nav-link position-relative pb-0" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
           <h2 class="my-0">{{ $article->title }}</h2>
+          @if($article->isGlobal())
+          <span class="opacity-75 position-absolute bottom-0 end-0 badge rounded-pill text-bg-secondary"
+            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Закреплено">
+            <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+          </span>
+          @endif
         </a>
       </div>
       <div class="card-body">
@@ -41,7 +47,7 @@
       @if(count($article->tags))
       <ul class="list-group list-group-flush border">
         <li class="list-group-item text-muted small">
-          @include('inc.article-tags')
+          @include('article.tags')
         </li>
       </ul>
       @endif

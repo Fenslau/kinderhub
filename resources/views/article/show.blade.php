@@ -74,7 +74,7 @@
         @if(count($article->tags))
         <ul class="list-group list-group-flush border">
           <li class="list-group-item text-muted small">
-            @include('inc.article-tags')
+            @include('article.tags')
           </li>
         </ul>
         @endif

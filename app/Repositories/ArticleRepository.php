@@ -18,7 +18,7 @@ class ArticleRepository implements ReadOnlyRepositoryInterface
         if (!empty($params['tag'])) {
             $articles->withAnyTags([$params['tag']], 'articles');
         }
-        $articles = $articles->paginate();
+        $articles = $articles->paginate(config('constants.defines.articles_per_page'));
         return $articles;
     }
 
