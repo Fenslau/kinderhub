@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AnnouncementTypeEnum;
 use App\Traits\Activeable;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,14 @@ class Announcement extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    protected function subCategory(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => json_decode($value, true),
+            set: fn($value) => json_encode($value, JSON_UNESCAPED_UNICODE)
+        );
     }
 
     public function user(): BelongsTo
