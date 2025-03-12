@@ -10,16 +10,14 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- Left Side Of Navbar -->
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('articles.index') }}">Статьи</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('announcements.index') }}">Объявления</a>
-          </li>
+        <ul class="navbar-nav me-auto" data-bs-theme="light">
+          @include('inc.menu')
         </ul>
         <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ms-auto">
+          <li data-bs-theme="light">
+            @include('inc.search-form')
+          </li>
           <!-- Authentication Links -->
           @guest
           @if (Route::has('login'))
@@ -42,7 +40,7 @@
               {{ Str::limit($authUser->name, 20) }}
             </a>
 
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" data-bs-theme="light">
               @if(!$authUser->hasVerifiedEmail())
               <a class="dropdown-item" href="{{ route('verification.notice') }}">
                 <i class="fa fa-envelope" aria-hidden="true"></i> Подтвердить email

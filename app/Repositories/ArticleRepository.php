@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Article;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticleRepository implements ReadOnlyRepositoryInterface
