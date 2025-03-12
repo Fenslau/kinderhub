@@ -2,8 +2,8 @@
   @foreach ($announcements as $announcement)
   <div class="w-100">
     <div class="card h-100">
-      <div class="card-header">
-        <a class="nav-link position-relative pb-0" aria-current="true" href="{{ route('announcements.show', $announcement->slug) }}">
+      <div class="card-header position-relative">
+        <a class="nav-link pb-0" aria-current="true" href="{{ route('announcements.show', $announcement->slug) }}">
           <h2 class="my-0 position-relative">{{ $announcement->title }}
           </h2>
           <span @class([ "text-bg-{$announcement->type->getColor()}" , "opacity-75 position-absolute bottom-0 end-0 badge rounded-pill" ,
@@ -34,7 +34,7 @@
       </div>
 
       <div style="max-height:400px;" class="card-body position-relative overflow-hidden">
-        <div class="card-text position-relative overflow-hidden text-overflow-container">
+        <div class="card-text position-relative overflow-hidden">
           @empty($announcement->highlights)
           {!! $announcement->content !!}
           @else

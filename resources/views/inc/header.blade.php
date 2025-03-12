@@ -63,19 +63,6 @@
                   document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> {{ __('Logout') }}
               </a>
-
-              <script>
-                function toggleTheme() {
-                  const html = document.documentElement;
-                  const currentTheme = html.getAttribute('data-bs-theme');
-                  html.setAttribute('data-bs-theme', currentTheme === 'dark' ? 'light' : 'dark');
-                }
-              </script>
-              <a class="dropdown-item" href=""
-                onclick="event.preventDefault(); toggleTheme()">
-                <i class="fa fa-lightbulb-o" aria-hidden="true"></i> Переключить тему
-              </a>
-
             </div>
           </li>
           @endguest
