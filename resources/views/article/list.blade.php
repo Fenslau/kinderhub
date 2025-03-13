@@ -3,14 +3,16 @@
   <div class="w-100">
     <div class="card h-100">
       <div class="card-header position-relative">
-        <a class="nav-link pb-0" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
+        <a class="nav-link pb-0 d-flex justify-content-between" aria-current="true" href="{{ route('articles.show', $article->slug) }}">
           <h2 class="my-0">{{ $article->title }}</h2>
-          @if($article->isGlobal())
-          <span class="opacity-75 position-absolute bottom-0 end-0 badge rounded-pill text-bg-secondary"
-            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Закреплено">
-            <i class="fa fa-thumb-tack" aria-hidden="true"></i>
-          </span>
-          @endif
+          <div class="d-flex justify-content-around flex-column align-items-end">
+            @if($article->isGlobal())
+            <span class="opacity-75 bottom-0 end-0 badge rounded-pill text-bg-secondary"
+              data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Закреплено">
+              <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+            </span>
+            @endif
+          </div>
         </a>
       </div>
       <div class="card-body">

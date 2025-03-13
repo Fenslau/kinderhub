@@ -12,12 +12,15 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <h1 class="card-title">{{ $announcement->title }}</h1>
-          <span @class([ "text-bg-{$announcement->type->getColor()}" , "opacity-75 position-absolute top-0 end-0 badge rounded-pill" ,
-            ])>
-            {{ $announcement->type->getLabel() }}
-          </span>
-
+          <div class="d-flex justify-content-between">
+            <h1 class="card-title">{{ $announcement->title }}</h1>
+            <div class="d-flex justify-content-around flex-column align-items-end">
+              <span @class([ "text-bg-{$announcement->type->getColor()}" , "opacity-75 top-0 end-0 badge rounded-pill" ,
+                ])>
+                {{ $announcement->type->getLabel() }}
+              </span>
+            </div>
+          </div>
           <div class="my-3 card-text d-flex justify-content-between align-items-baseline">
             <a class="text-decoration-none" @empty($announcement->user?->id) @else href="{{ route('users.show', $announcement->user?->id ?? '') }}" @endempty>
               @include('user.avatar', ['user' => $announcement->user])
