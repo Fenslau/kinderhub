@@ -35,6 +35,11 @@ class Announcement extends Model
         ];
     }
 
+    protected $with = [
+        'user',
+        'careCategory'
+    ];
+
     protected function subCategory(): Attribute
     {
         return Attribute::make(

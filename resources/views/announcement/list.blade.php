@@ -6,17 +6,17 @@
         <a class="nav-link pb-0 d-flex justify-content-between" aria-current="true" href="{{ route('announcements.show', $announcement->slug) }}">
           <h2 class="my-0 position-relative">{{ $announcement->title }}
           </h2>
-          <div class="d-flex justify-content-around flex-column align-items-end">
+          <div class="d-flex justify-content-around align-items-center">
+            <span @class([ "text-bg-{$announcement->type->getColor()}" , "align-items-end opacity-75 badge rounded-pill" ,
+              ])>
+              {{ $announcement->type->getLabel() }}
+            </span>
             @if($announcement->isGlobal())
-            <span class="opacity-75 top-0 end-0 badge rounded-pill text-bg-secondary"
+            <span class="opacity-75 badge rounded-pill text-bg-secondary ms-2"
               data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Закреплено">
               <i class="fa fa-thumb-tack" aria-hidden="true"></i>
             </span>
             @endif
-            <span @class([ "text-bg-{$announcement->type->getColor()}" , "align-items-end opacity-75 bottom-0 end-0 badge rounded-pill" ,
-              ])>
-              {{ $announcement->type->getLabel() }}
-            </span>
           </div>
         </a>
       </div>

@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const containerHeight = container.clientHeight;
             const textBlockHeight = textBlock.scrollHeight;
 
-            // Проверяем высоту текста и применяем класс, если текст длиннее контейнера
             if (textBlockHeight > containerHeight) {
                 textBlock.classList.add('text-overflow-container');
             }
