@@ -5,20 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CareCategoryResource\Pages;
 use App\Filament\Resources\CareCategoryResource\RelationManagers;
 use App\Models\CareCategory;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
 
 class CareCategoryResource extends Resource
 {
@@ -36,19 +33,12 @@ class CareCategoryResource extends Resource
                 TextInput::make('title')
                     ->label('Название')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Краткое описание')
-                    ->maxLength(255),
-                Repeater::make('sub_category')
-                    ->label('Подкатегории')
-                    ->schema([
-                        TextInput::make('title')
-                            ->label('Название')
-                            ->required()
-                            ->maxLength(255)
-                    ])
-                    ->reorderableWithButtons()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -58,23 +48,10 @@ class CareCategoryResource extends Resource
             ->columns([
                 TextColumn::make('title')
                     ->label('Название')
-                    ->description(fn(CareCategory $record): ?string => Str::limit($record->description, 32))
                     ->searchable(),
-                TextColumn::make('sub_category')
-                    ->label('Подкатегории')
-                    ->formatStateUsing(fn(array $state): string => implode(',', $state))
-                    ->badge()
-                    ->color('info'),
-                TextColumn::make('created_at')
-                    ->label('Создано')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label('Изменено')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('description')
+                    ->label('Краткое описание')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -89,9 +66,7 @@ class CareCategoryResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->paginated(false)
-            ->reorderable('sort');
+            ]);
     }
 
     public static function getRelations(): array

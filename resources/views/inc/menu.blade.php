@@ -6,12 +6,12 @@
         data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
         aria-expanded="false">Объявления</a>
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="{{ route('announcements.index') }}">Все</a>
+        <a class="dropdown-item" href="{{ route('announcements.index'                                                               ) }}">Все</a>
         <div class="dropdown-divider"></div>
-        @foreach(\App\Models\CareCategory::all() as $category)
+        @foreach(\App\Models\CareCategory::where('parent_id', -1)->get() as $careCategory)
         <a class="dropdown-item"
-            href="{{ route('announcements.index', ['category' => $category->title]) }}">
-            {{ $category->title }}
+            href="{{ route('announcements.index', ['care_category' => $careCategory->title]) }}">
+            {{ $careCategory->title }}
         </a>
         @endforeach
     </div>

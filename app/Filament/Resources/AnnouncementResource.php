@@ -58,17 +58,22 @@ class AnnouncementResource extends Resource
                 Radio::make('care_category_id')
                     ->label('Категория услуги')
                     ->required()
-                    ->options(CareCategory::orderBy('sort')->pluck('title', 'id'))
-                    ->descriptions(CareCategory::orderBy('sort')->pluck('description', 'id'))
+                    ->options(CareCategory::where('parent_id', -1)->orderBy('order')->pluck('title', 'id'))
+                    ->descriptions(CareCategory::where('parent_id', -1)->orderBy('order')->pluck('description', 'id'))
                     ->inline()
                     ->inlineLabel(false)
+                    ->live()
+                    ->columnSpanFull(),
+                Select::make('care_subcategory_id')
+                    ->label('Подкатегория услуги')
+                    ->options(fn(Get $get): Collection =>
+                    CareCategory::where('parent_id', $get('care_category_id'))->orderBy('order')->pluck('title', 'id'))
                     ->live(),
-                Select::make('sub_category')
+                Select::make('multi_care_subcategory')
                     ->label('Подкатегория услуги')
                     ->multiple()
-                    ->options(fn(Get $get): Collection => collect(array_column(CareCategory::query()
-                        ->where('id', $get('care_category_id'))
-                        ->first()?->sub_category ?? [], 'title', 'title'))),
+                    ->options(fn(Get $get): Collection =>
+                    CareCategory::getAllDescendants($get('care_subcategory_id'))->pluck('title', 'id')),
                 TextInput::make('title')
                     ->label('Заголовок')
                     ->required()
@@ -121,7 +126,7 @@ class AnnouncementResource extends Resource
                     ->label('Тип')
                     ->sortable()
                     ->badge(),
-                TextColumn::make('sub_category')
+                TextColumn::make('careSubcategory.title')
                     ->label('Категория')
                     ->badge()
                     ->color('info')

@@ -1,5 +1,5 @@
 <div class="row mb-3">
-  <div class="d-flex justify-content-center flex-wrap">
+  <div class="d-flex justify-content-center flex-nowrap">
     <div class="m-2">
       <a href="{{ route('login.redirect', 'driver=google') }}"><img style="max-height: 3rem" src="{{ asset('build/assets/icons/google.png') }}" alt="Google"> </a>
     </div>

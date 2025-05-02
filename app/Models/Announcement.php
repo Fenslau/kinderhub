@@ -22,7 +22,8 @@ class Announcement extends Model
             'type' => AnnouncementTypeEnum::class,
             'is_active' => 'boolean',
             'is_global' => 'boolean',
-            'sub_category' => 'array'
+            'multi_care_subcategory' => 'array',
+
         ];
     }
 
@@ -40,7 +41,7 @@ class Announcement extends Model
         'careCategory'
     ];
 
-    protected function subCategory(): Attribute
+    protected function multiSubcategory(): Attribute
     {
         return Attribute::make(
             get: fn($value) => json_decode($value, true),
@@ -56,6 +57,11 @@ class Announcement extends Model
     public function careCategory(): BelongsTo
     {
         return $this->belongsTo(CareCategory::class);
+    }
+
+    public function careSubcategory(): BelongsTo
+    {
+        return $this->belongsTo(CareCategory::class, 'care_subcategory_id');
     }
 
     public function isActive(): bool

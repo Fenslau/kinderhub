@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      @if(!empty($announcement->sub_category))
+      @if(!empty($announcement->careCategory))
       <ul class="list-group list-group-flush border">
         <li class="list-group-item text-muted small">
           @include('announcement.categories')

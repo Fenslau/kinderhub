@@ -12,7 +12,7 @@
         @foreach ($images as $index => $image)
         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
             <img src="{{ Storage::url($image['url']) }}" class="d-block w-100" alt="{{ $image['title'] }}"
-                style="height: 400px; object-fit: contain;">
+                style="height: 400px; max-height: 80vw; object-fit: contain;">
             <div class="carousel-caption-container">
                 <div class="carousel-caption d-none d-md-block py-3" style="background-color: rgba(0, 0, 0, 0);">
                     <h5 class="text-emphasis-color" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">{{ $image['title'] }}</h5>

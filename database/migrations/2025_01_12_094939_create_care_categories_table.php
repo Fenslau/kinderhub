@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description')->nullable();
-            $table->tinyInteger('sort')->nullable();
-            $table->json('sub_category')->nullable();
+            $table->integer('parent_id')->default(-1);
+            $table->integer('order')->default(0)->index();
             $table->timestamps();
         });
     }
