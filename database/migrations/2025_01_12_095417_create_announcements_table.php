@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('care_category_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('care_subcategory_id')->nullable()->constrained('care_categories', 'id')->nullOnDelete();
             $table->json('multi_care_subcategory')->nullable();
             $table->tinyInteger('type')->default(AnnouncementTypeEnum::PROVIDE);
             $table->string('title');

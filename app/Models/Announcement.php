@@ -41,14 +41,6 @@ class Announcement extends Model
         'careCategory'
     ];
 
-    protected function multiSubcategory(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => json_decode($value, true),
-            set: fn($value) => json_encode($value, JSON_UNESCAPED_UNICODE)
-        );
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -57,11 +49,6 @@ class Announcement extends Model
     public function careCategory(): BelongsTo
     {
         return $this->belongsTo(CareCategory::class);
-    }
-
-    public function careSubcategory(): BelongsTo
-    {
-        return $this->belongsTo(CareCategory::class, 'care_subcategory_id');
     }
 
     public function isActive(): bool

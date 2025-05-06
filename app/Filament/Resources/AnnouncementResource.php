@@ -64,22 +64,19 @@ class AnnouncementResource extends Resource
                     ->inlineLabel(false)
                     ->live()
                     ->columnSpanFull(),
-                Select::make('care_subcategory_id')
-                    ->label('Подкатегория услуги')
-                    ->options(fn(Get $get): Collection =>
-                    CareCategory::where('parent_id', $get('care_category_id'))->orderBy('order')->pluck('title', 'id'))
-                    ->live(),
                 Select::make('multi_care_subcategory')
-                    ->label('Подкатегория услуги')
+                    ->label('Выберите подкатегорию')
                     ->multiple()
-                    ->options(fn(Get $get): Collection =>
-                    CareCategory::getAllDescendants($get('care_subcategory_id'))->pluck('title', 'id')),
+                    ->options(fn(Get $get): array =>
+                    CareCategory::processedSelectArray($get('care_category_id')))
+                    ->searchable(),
                 TextInput::make('title')
                     ->label('Заголовок')
                     ->required()
                     ->maxLength(255)
                     ->live(debounce: 500)
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', SlugService::createSlug(Announcement::class, 'slug', $state ?? ''))),
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', SlugService::createSlug(Announcement::class, 'slug', $state ?? '')))
+                    ->columnSpanFull(),
                 TextInput::make('slug')
                     ->required()
                     ->label('Ссылка')
@@ -126,10 +123,13 @@ class AnnouncementResource extends Resource
                     ->label('Тип')
                     ->sortable()
                     ->badge(),
-                TextColumn::make('careSubcategory.title')
+                TextColumn::make('multi_care_subcategory')
                     ->label('Категория')
                     ->badge()
                     ->color('info')
+                    ->formatStateUsing(function ($state, $record) {
+                        return CareCategory::find($state)?->title;
+                    })
                     ->description(fn(Announcement $record): string => $record->careCategory->title, position: 'above'),
                 TextColumn::make('title')
                     ->label('Заголовок')
@@ -174,9 +174,11 @@ class AnnouncementResource extends Resource
                 SelectFilter::make('type')
                     ->label('Тип')
                     ->options(AnnouncementTypeEnum::class),
-                SelectFilter::make('category_id')
+                SelectFilter::make('care_category_id')
                     ->label('Категория')
-                    ->relationship('careCategory', 'title'),
+                    ->options(function () {
+                        return CareCategory::where('parent_id', -1)->pluck('title', 'id');
+                    }),
                 TrashedFilter::make(),
             ])
             ->actions([
