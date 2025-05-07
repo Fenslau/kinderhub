@@ -35,6 +35,10 @@
 
         </div>
 
+        @if(!empty($announcement->user->profile->latitude) && !empty($announcement->user->profile->longitude))
+        @include('inc.map', ['latitude' => $announcement->user->profile->latitude, 'longitude' => $announcement->user->profile->longitude])
+        @endif
+
         @if(!empty($announcement->careCategory))
         <ul class="list-group list-group-flush border">
           <li class="list-group-item text-muted small">

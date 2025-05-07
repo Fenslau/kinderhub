@@ -35,7 +35,7 @@
         @csrf
         <div class="text-end">
           <input type="hidden" name="comment"
-            @if($comment->commentable?->commentable instanceof \App\Models\Comment)
+          @if($comment->commentable?->commentable instanceof \App\Models\Comment)
           value="{{ $comment->commentable?->id }}"
           @else
           value="{{ $comment->id }}"

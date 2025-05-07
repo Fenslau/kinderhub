@@ -7,10 +7,13 @@ use App\Models\City;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\View;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
@@ -22,6 +25,7 @@ class EditProfile extends BaseEditProfile
 {
     public function form(Form $form): Form
     {
+        $profile = request()->user()->profile;
         return $form
             ->schema([
                 $this->getNameFormComponent(),
@@ -64,6 +68,16 @@ class EditProfile extends BaseEditProfile
                             ->directory('user-images')
                             ->dehydrated(fn(?array $state, ?Model $record): bool => !(Str::startsWith($record?->image, 'http') && !count($state)))
                             ->maxSize(5000),
+
+                        Hidden::make('latitude')->default('56.472160804211'),
+                        Hidden::make('longitude')->default('84.998472612998'),
+                        Placeholder::make('locationHelp')
+                            ->label('Выберите ваше местоположение'),
+                        View::make('components.map')->viewData([
+                            'latitude' => $profile->latitude ?? 56.472160804211,
+                            'longitude' => $profile->longitude ?? 84.998472612998,
+                        ]),
+
                         RichEditor::make('about')
                             ->label('Информация')
                             ->toolbarButtons([
@@ -78,6 +92,11 @@ class EditProfile extends BaseEditProfile
                     ])
                     ->columns(1),
             ]);
+    }
+
+    public function updated($name, $value)
+    {
+        $this->redirectRoute('filament.admin.auth.profile');
     }
 
     protected function getEmailFormComponent(): Component

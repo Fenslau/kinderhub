@@ -19,6 +19,9 @@ return new class extends Migration
             $table->foreignId('region_id')->nullable()->constrained('cities')->nullOnDelete();
             $table->tinyInteger('role')->default(UserRoleEnum::USER);
             $table->text('image')->nullable();
+            $table->decimal('latitude', 14, 12)->nullable();
+            $table->decimal('longitude', 14, 12)->nullable();
+            $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->text('about')->nullable();
             $table->boolean('is_active')->default(true);
