@@ -12,10 +12,13 @@ use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\View;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -106,13 +109,28 @@ class UserResource extends Resource
                             ->directory('user-images')
                             ->dehydrated(fn(?array $state, ?Model $record): bool => !(Str::startsWith($record?->image, 'http') && !count($state)))
                             ->maxSize(5000),
+                        Textarea::make('address')
+                            ->label('Адрес')
+                            ->disabled()
+                            ->autosize()
+                            ->hint('заполнится автоматически после выбора на карте и сохранения')
+                            ->hintIcon('heroicon-m-home'),
+
+                        // Hidden::make('latitude')->default('56.472160804211'),
+                        // Hidden::make('longitude')->default('84.998472612998'),
+                        // View::make('components.map')->viewData([
+                        //     'latitude' => $profile->latitude ?? 56.472160804211,
+                        //     'longitude' => $profile->longitude ?? 84.998472612998,
+                        // ])
+                        //     ->columnSpanFull(),
                         RichEditor::make('about')
                             ->label('Информация')
                             ->toolbarButtons([
                                 'bold',
                                 'italic',
                                 'underline',
-                            ]),
+                            ])
+                            ->columnSpanFull(),
                         Toggle::make('is_active')
                             ->label('Активен')
                             ->default(true)

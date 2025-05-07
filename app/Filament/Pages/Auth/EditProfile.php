@@ -11,6 +11,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\View;
@@ -73,6 +74,13 @@ class EditProfile extends BaseEditProfile
                         Hidden::make('longitude')->default('84.998472612998'),
                         Placeholder::make('locationHelp')
                             ->label('Выберите ваше местоположение'),
+                        Textarea::make('address')
+                            ->label('Адрес')
+                            ->disabled()
+                            ->autosize()
+                            ->hint('заполнится автоматически после выбора на карте и сохранения')
+                            ->hintIcon('heroicon-m-home'),
+
                         View::make('components.map')->viewData([
                             'latitude' => $profile->latitude ?? 56.472160804211,
                             'longitude' => $profile->longitude ?? 84.998472612998,
